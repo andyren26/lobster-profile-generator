@@ -150,6 +150,40 @@
               </label>
             </div>
           </div>
+
+          <!-- 7. 打招呼方式 -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="lobsterGreeting">7. 打招呼方式</label>
+              <button type="button" id="btnQuickGreetingPreset" class="text-link-btn" title="切換範例問候">🎲 換個問候</button>
+            </div>
+            <div class="input-with-action">
+              <input type="text" id="lobsterGreeting" maxlength="40" placeholder="例如：你今天好嗎？" value="你今天好嗎？">
+              <button type="button" id="btnRandomGreeting" class="input-inline-btn" title="隨機打招呼">🎲 隨機</button>
+            </div>
+          </div>
+
+          <!-- 8. 口頭禪 -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="lobsterCatchphrase">8. 口頭禪</label>
+              <button type="button" id="btnQuickCatchphrasePreset" class="text-link-btn" title="切換範例口頭禪">🎲 換個口頭禪</button>
+            </div>
+            <div class="input-with-action">
+              <input type="text" id="lobsterCatchphrase" maxlength="30" placeholder="例如：我很棒" value="我很棒">
+              <button type="button" id="btnRandomCatchphrase" class="input-inline-btn" title="隨機口頭禪">🎲 隨機</button>
+            </div>
+          </div>
+
+          <!-- 9. 禁忌話題 -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="lobsterTaboo">9. 禁忌話題</label>
+              <button type="button" id="btnQuickTabooPreset" class="text-link-btn" title="切換範例規範">🎲 換個規範</button>
+            </div>
+            <textarea id="lobsterTaboo" rows="2" placeholder="例如：不聊有關性方面的問題，也不講髒話">不聊有關性方面的問題，也不講髒話</textarea>
+            <span class="field-hint">💡 設定龍蝦對話時絕不觸碰的話題與倫理底線</span>
+          </div>
         </fieldset>
 
         <!-- SECTION 2: 進階特工裝甲與能力值 (Cyber RPG Specs) -->
@@ -484,6 +518,22 @@
             <p class="bio-text" id="cardBioText">
               平時幽默開朗且熱心助人，擁有堅硬的機械外殼但心思細膩。喜歡用輕鬆有趣的方式解釋複雜問題，遇到困難時會揮舞大螯奮戰到底！
             </p>
+          </div>
+
+          <!-- Card Directives & Taboos Block (打招呼方式、口頭禪、禁忌話題) -->
+          <div class="card-directives-block">
+            <div class="directive-item">
+              <span class="directive-label">👋 打招呼</span>
+              <span class="directive-val" id="cardGreetingText">你今天好嗎？</span>
+            </div>
+            <div class="directive-item">
+              <span class="directive-label">🗣️ 口頭禪</span>
+              <span class="directive-val" id="cardCatchphraseVal">我很棒</span>
+            </div>
+            <div class="directive-item taboo-item">
+              <span class="directive-label">🚫 禁忌話題</span>
+              <span class="directive-val taboo-val" id="cardTabooText">不聊有關性方面的問題，也不講髒話</span>
+            </div>
           </div>
 
           <!-- Card Motto & Signature -->

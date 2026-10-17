@@ -1105,6 +1105,53 @@ select option {
   line-height: 1.55;
 }
 
+/* Card Directives & Taboos Block */
+.card-directives-block {
+  background: rgba(10, 16, 32, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.directive-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.81rem;
+  line-height: 1.45;
+}
+
+.directive-label {
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  white-space: nowrap;
+  min-width: 66px;
+}
+
+.directive-val {
+  color: #e2e8f0;
+  word-break: break-word;
+}
+
+.directive-item.taboo-item {
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+.directive-item.taboo-item .directive-label {
+  color: #ff5470;
+}
+
+.directive-val.taboo-val {
+  color: #fca5a5;
+  font-size: 0.8rem;
+}
+
 /* Card Quote Box */
 .card-quote-box {
   background: rgba(233, 69, 96, 0.08);
@@ -1377,6 +1424,13 @@ select option {
   color: var(--text-muted);
   font-weight: 400;
   margin-left: 4px;
+}
+
+.field-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 5px;
+  display: block;
 }
 
 .selection-count-badge {
