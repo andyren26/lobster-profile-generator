@@ -3,10 +3,557 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>龍蝦AI個人檔案產生器</title>
+  <title>龍蝦AI個人檔案產生器 | OpenClaw 專屬個性定制</title>
+  <meta name="description" content="為你的OpenClaw龍蝦打造獨一無二的個性！提供自訂外觀、性格原型、五維屬性、專屬武器與戰力評分，一鍵匯出IDENTITY.md個人檔案、AI System Prompt與高畫質特工身分證。">
+  <meta name="keywords" content="龍蝦AI, OpenClaw, AI個人檔案產生器, IDENTITY.md, 龍蝦生成器, 賽博龍蝦, AI Agent Profile">
+  
+  <!-- Google Fonts: Outfit, Noto Sans TC, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Ambient background glow particles & cyber grid -->
+  <div class="cyber-bg-grid" aria-hidden="true"></div>
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-badge">
+        <span class="pulse-indicator"></span>
+        <span class="badge-text">OPENCLAW AGENT PROTOCOL v2.5</span>
+      </div>
+      <h1 class="main-title">
+        <span class="title-icon">🦞</span>
+        龍蝦AI個人檔案產生器
+      </h1>
+      <p class="sub-title">為你的OpenClaw龍蝦打造獨一無二的個性</p>
+      
+      <!-- Audio toggle button -->
+      <button id="soundToggleBtn" class="sound-toggle-btn" title="切換音效" aria-label="切換音效">
+        <span class="sound-icon">🔊</span>
+        <span class="sound-text">音效開</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="app-layout">
+    <!-- Left Column: Customization Controls -->
+    <section class="config-panel" aria-labelledby="configPanelTitle">
+      <div class="panel-header">
+        <div class="panel-title-wrapper">
+          <span class="panel-badge-num">01</span>
+          <h2 id="configPanelTitle" class="panel-title">特工參數配置 Studio</h2>
+        </div>
+        <button id="btnRandomize" class="btn-subtle" title="隨機生成所有屬性">
+          <span class="btn-icon">🎲</span> 隨機全套配置
+        </button>
+      </div>
+
+      <form id="lobsterForm" class="lobster-form" onsubmit="event.preventDefault();">
+        
+        <!-- SECTION 1: 核心個人檔案規範 (IDENTITY.md 欄位 1~6 依序排列) -->
+        <fieldset class="form-section highlight-section">
+          <legend class="section-legend">
+            <span class="legend-icon">📄</span> 核心個人檔案規範 (IDENTITY.md)
+          </legend>
+          
+          <!-- 1. 龍蝦名字 -->
+          <div class="form-group">
+            <label for="lobsterName">1. 龍蝦名字 <span class="required-star">*</span></label>
+            <div class="input-with-action">
+              <input type="text" id="lobsterName" maxlength="20" placeholder="例如：小龍" value="小龍" required>
+              <button type="button" id="btnRandomName" class="input-inline-btn" title="隨機名稱">🎲 隨機</button>
+            </div>
+          </div>
+
+          <!-- 2. 說話風格 -->
+          <div class="form-group">
+            <label for="speechStyle">2. 說話風格</label>
+            <select id="speechStyle">
+              <option value="溫柔體貼">溫柔體貼</option>
+              <option value="幽默風趣" selected>幽默風趣</option>
+              <option value="專業嚴謹">專業嚴謹</option>
+              <option value="活潑可愛">活潑可愛</option>
+            </select>
+          </div>
+
+          <!-- 3. 主要語言 -->
+          <div class="form-group">
+            <label for="mainLanguage">3. 主要語言</label>
+            <select id="mainLanguage">
+              <option value="繁體中文" selected>繁體中文</option>
+              <option value="英文">英文</option>
+              <option value="日文">日文</option>
+            </select>
+          </div>
+
+          <!-- 4. 個性描述 -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="personalityDesc">4. 個性描述</label>
+              <button type="button" id="btnQuickBioPreset" class="text-link-btn" title="切換範例個性">🎲 換個範本</button>
+            </div>
+            <textarea id="personalityDesc" rows="3" placeholder="描述你希望龍蝦有什麼樣的個性...">平時幽默開朗且熱心助人，擁有堅硬的機械外殼但心思細膩。喜歡用輕鬆有趣的方式解釋複雜問題，遇到困難時會揮舞大螯奮戰到底！</textarea>
+          </div>
+
+          <!-- 5. 擅長領域 -->
+          <div class="form-group">
+            <div class="label-row">
+              <label>5. 擅長領域 <span class="label-hint">(可多選)</span></label>
+              <span class="selection-count-badge" id="domainCountBadge">已選 2 項</span>
+            </div>
+            <div class="domain-checkboxes" id="domainGroup">
+              <label class="checkbox-pill">
+                <input type="checkbox" name="domainSkills" value="生活助手" checked>
+                <span class="chk-content"><span class="chk-icon">☕</span> 生活助手</span>
+              </label>
+              <label class="checkbox-pill">
+                <input type="checkbox" name="domainSkills" value="程式開發" checked>
+                <span class="chk-content"><span class="chk-icon">💻</span> 程式開發</span>
+              </label>
+              <label class="checkbox-pill">
+                <input type="checkbox" name="domainSkills" value="教育教學">
+                <span class="chk-content"><span class="chk-icon">📚</span> 教育教學</span>
+              </label>
+              <label class="checkbox-pill">
+                <input type="checkbox" name="domainSkills" value="創意寫作">
+                <span class="chk-content"><span class="chk-icon">✍️</span> 創意寫作</span>
+              </label>
+              <label class="checkbox-pill">
+                <input type="checkbox" name="domainSkills" value="資料分析">
+                <span class="chk-content"><span class="chk-icon">📊</span> 資料分析</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 6. 回覆長度偏好 -->
+          <div class="form-group">
+            <label>6. 回覆長度偏好</label>
+            <div class="radio-pill-group" id="responseLengthGroup">
+              <label class="radio-pill">
+                <input type="radio" name="responseLength" value="簡短精要">
+                <span>簡短精要</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="responseLength" value="中等長度" checked>
+                <span>中等長度</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="responseLength" value="詳細完整">
+                <span>詳細完整</span>
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- SECTION 2: 進階特工裝甲與能力值 (Cyber RPG Specs) -->
+        <details class="advanced-specs-details" open>
+          <summary class="advanced-specs-summary">
+            <span class="summary-left">
+              <span class="legend-icon">🛡️</span>
+              <span class="summary-title">進階特工裝甲、外觀與能力點數</span>
+            </span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          
+          <div class="advanced-specs-body">
+            <!-- 甲殼型態與視覺外觀 -->
+            <div class="form-sub-section">
+              <label class="sub-legend">甲殼型態與視覺外觀</label>
+              <div class="avatar-selector-grid" id="armorTypeSelector">
+                <label class="avatar-option-card">
+                  <input type="radio" name="armorSkin" value="cyber" checked>
+                  <div class="avatar-card-inner">
+                    <img src="assets/cyber.jpg" alt="霓虹賽博發光螯" loading="lazy">
+                    <div class="avatar-info">
+                      <span class="avatar-name">⚡ 霓虹賽博發光螯</span>
+                      <span class="avatar-desc">高頻率脈衝·光子穿透</span>
+                    </div>
+                    <div class="check-mark">✓</div>
+                  </div>
+                </label>
+
+                <label class="avatar-option-card">
+                  <input type="radio" name="armorSkin" value="golden">
+                  <div class="avatar-card-inner">
+                    <img src="assets/golden.jpg" alt="帝王黃金熔岩甲" loading="lazy">
+                    <div class="avatar-info">
+                      <span class="avatar-name">👑 帝王黃金熔岩甲</span>
+                      <span class="avatar-desc">奢華防禦·高溫灼燒</span>
+                    </div>
+                    <div class="check-mark">✓</div>
+                  </div>
+                </label>
+
+                <label class="avatar-option-card">
+                  <input type="radio" name="armorSkin" value="abyssal">
+                  <div class="avatar-card-inner">
+                    <img src="assets/abyssal.jpg" alt="深海深淵藍晶螯" loading="lazy">
+                    <div class="avatar-info">
+                      <span class="avatar-name">🌌 深淵生物藍晶螯</span>
+                      <span class="avatar-desc">極限隱匿·低溫超導</span>
+                    </div>
+                    <div class="check-mark">✓</div>
+                  </div>
+                </label>
+
+                <label class="avatar-option-card">
+                  <input type="radio" name="armorSkin" value="crimson">
+                  <div class="avatar-card-inner">
+                    <img src="assets/crimson.jpg" alt="波士頓真紅重裝" loading="lazy">
+                    <div class="avatar-info">
+                      <span class="avatar-name">🦞 波士頓真紅重裝</span>
+                      <span class="avatar-desc">重型液壓·物理粉碎</span>
+                    </div>
+                    <div class="check-mark">✓</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- 職稱稱號與主武裝 -->
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="lobsterTitle">軍階 / 職稱稱號</label>
+                <div class="input-with-action">
+                  <input type="text" id="lobsterTitle" maxlength="20" placeholder="例如：深淵傳奇除蟲架構師" value="深淵傳奇除蟲架構師">
+                  <button type="button" id="btnRandomTitle" class="input-inline-btn" title="隨機稱號">🎲</button>
+                </div>
+              </div>
+
+              <div class="form-group flex-1">
+                <label for="weaponSelect">主武裝配置</label>
+                <select id="weaponSelect">
+                  <option value="雙持超導量子光子鉗 (+150% 浮點運算鉗擊)">⚡ 雙持超導量子光子鉗</option>
+                  <option value="超重型液壓粉碎大螯 (+200% Bug物理抹除)" selected>💥 超重型液壓粉碎大螯</option>
+                  <option value="青軸機械超音速連打爪 (每秒1,200行重構)">⌨️ 青軸機械超音速連打爪</option>
+                  <option value="深海奈米珍珠力場護盾 (阻擋所有無效需求)">🛡️ 深海奈米珍珠力場護盾</option>
+                  <option value="反重力微型魚雷推進器 (全速穿梭多執行緒)">🚀 反重力微型魚雷推進器</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 五維代理能力屬性 (Claw Radar) -->
+            <div class="form-sub-section">
+              <div class="section-legend-row">
+                <label class="sub-legend">📊 五維能力屬性 (Claw Radar)</label>
+                <div class="preset-pill-group">
+                  <button type="button" class="stat-preset-btn" data-preset="combat">戰鬥狂</button>
+                  <button type="button" class="stat-preset-btn" data-preset="hacker">極客神</button>
+                  <button type="button" class="stat-preset-btn" data-preset="slacker">佛系蝦</button>
+                  <button type="button" class="stat-preset-btn" data-preset="balanced">平衡均質</button>
+                </div>
+              </div>
+
+              <div class="stats-sliders-container">
+                <div class="stat-slider-row">
+                  <div class="stat-label-wrap">
+                    <span class="stat-name">💥 夾碎Bug暴擊力</span>
+                    <span class="stat-val" id="valStat1">92</span>
+                  </div>
+                  <input type="range" id="stat1" class="cyber-slider" min="10" max="100" value="92">
+                </div>
+
+                <div class="stat-slider-row">
+                  <div class="stat-label-wrap">
+                    <span class="stat-name">🛡️ 賽博耐鹽抗壓度</span>
+                    <span class="stat-val" id="valStat2">85</span>
+                  </div>
+                  <input type="range" id="stat2" class="cyber-slider" min="10" max="100" value="85">
+                </div>
+
+                <div class="stat-slider-row">
+                  <div class="stat-label-wrap">
+                    <span class="stat-name">🧠 神經脈衝運算頻率</span>
+                    <span class="stat-val" id="valStat3">88</span>
+                  </div>
+                  <input type="range" id="stat3" class="cyber-slider" min="10" max="100" value="88">
+                </div>
+
+                <div class="stat-slider-row">
+                  <div class="stat-label-wrap">
+                    <span class="stat-name">💨 深海隱匿摸魚指數</span>
+                    <span class="stat-val" id="valStat4">65</span>
+                  </div>
+                  <input type="range" id="stat4" class="cyber-slider" min="10" max="100" value="65">
+                </div>
+
+                <div class="stat-slider-row">
+                  <div class="stat-label-wrap">
+                    <span class="stat-name">🍀 幸運脫殼逃生率</span>
+                    <span class="stat-val" id="valStat5">78</span>
+                  </div>
+                  <input type="range" id="stat5" class="cyber-slider" min="10" max="100" value="78">
+                </div>
+              </div>
+            </div>
+
+            <!-- 座右銘與說話口癖 -->
+            <div class="form-row">
+              <div class="form-group flex-2">
+                <label for="lobsterMotto">戰鬥座右銘 / 信條</label>
+                <div class="input-with-action">
+                  <input type="text" id="lobsterMotto" maxlength="45" value="世上沒有一鉗夾不碎的Bug，如果有，那就兩鉗！">
+                  <button type="button" id="btnRandomMotto" class="input-inline-btn" title="隨機座右銘">🎲</button>
+                </div>
+              </div>
+
+              <div class="form-group flex-1">
+                <label for="catchphraseSelect">對話口癖 (結尾詞)</label>
+                <select id="catchphraseSelect">
+                  <option value="～夾！" selected>～夾！</option>
+                  <option value="咔嚓！">咔嚓！</option>
+                  <option value="🤖嗶嗶～">🤖嗶嗶～</option>
+                  <option value="（推了推眼鏡）">（推了推眼鏡）</option>
+                  <option value="～咕嚕咕嚕（吐泡泡）">～咕嚕咕嚕（吐泡泡）</option>
+                  <option value="（揮舞大螯恐嚇）">（揮舞大螯恐嚇）</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- PRIMARY GENERATE BUTTON -->
+        <div class="action-submit-wrap">
+          <button type="button" id="btnGenerate" class="btn-primary-glow">
+            <span class="btn-primary-icon">✨</span>
+            <span class="btn-primary-text">產生個人檔案</span>
+          </button>
+        </div>
+
+        <!-- SECTION: IDENTITY.md 生成結果 (深色程式碼區塊 - 依規格顯示在「產生個人檔案」下方) -->
+        <div class="identity-code-card" id="identityCodeSection">
+          <div class="code-card-header">
+            <div class="code-file-info">
+              <span class="file-icon">📄</span>
+              <div class="file-text-col">
+                <span class="file-name">IDENTITY.md</span>
+                <span class="file-badge-format">生成結果</span>
+              </div>
+            </div>
+            <div class="code-header-actions">
+              <!-- 複製到剪貼簿按鈕 (規格: 點擊後變「✅ 已複製！」持續兩秒再恢復) -->
+              <button type="button" id="btnCopyIdentity" class="btn-copy-identity" title="複製到剪貼簿">
+                <span class="copy-icon">📋</span>
+                <span class="copy-text">複製到剪貼簿</span>
+              </button>
+              <button type="button" id="btnDownloadMd" class="btn-subtle-sm" title="下載 IDENTITY.md 檔案">
+                <span>⬇️ 下載 .md</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 深色程式碼區塊 (等寬字體與行號) -->
+          <div class="dark-code-wrapper">
+            <div class="code-window-bar">
+              <div class="window-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <span class="window-title">IDENTITY.md — Live Output</span>
+              <span class="code-lang-tag">MARKDOWN</span>
+            </div>
+            
+            <div class="code-editor-viewport">
+              <div class="code-line-numbers" id="codeLineNumbers" aria-hidden="true">
+                <!-- Dynamically generated line numbers: 1, 2, 3... -->
+              </div>
+              <pre class="dark-code-pre"><code id="identityMdOutput" class="markdown-body">正在生成 IDENTITY.md 個人檔案...</code></pre>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Right Column: Results & Profile Card Preview -->
+    <section class="preview-panel" aria-labelledby="previewPanelTitle">
+      <div class="panel-header">
+        <div class="panel-title-wrapper">
+          <span class="panel-badge-num">02</span>
+          <h2 id="previewPanelTitle" class="panel-title">特工認證卡與匯出</h2>
+        </div>
+        <div class="rarity-badge-header" id="rarityBadgeHeader">
+          <span class="rarity-star">★</span>
+          <span class="rarity-text" id="headerRarityText">SSR 級傳奇特工</span>
+        </div>
+      </div>
+
+      <!-- THE LOBSTER PROFILE CARD -->
+      <div class="card-viewport">
+        <div class="lobster-card" id="lobsterCard">
+          
+          <!-- Card Decorative Top Bar -->
+          <div class="card-top-bar">
+            <div class="card-brand-tag">
+              <span class="chip-dot"></span>
+              <span>OPENCLAW AGENT ID</span>
+            </div>
+            <div class="card-serial" id="cardSerial">CLAW-8892-X</div>
+            <div class="card-chip-sim">
+              <span class="chip-line"></span>
+              <span class="chip-line"></span>
+            </div>
+          </div>
+
+          <!-- Main Hero Profile Area -->
+          <div class="card-hero">
+            <div class="avatar-ring-container">
+              <div class="avatar-glow-ring"></div>
+              <img id="cardAvatarImg" class="card-avatar" src="assets/cyber.jpg" alt="龍蝦AI特工頭像">
+              <div class="rank-badge" id="cardRankBadge">SSR</div>
+            </div>
+
+            <div class="card-identity">
+              <div class="card-titles-row">
+                <span class="badge-role" id="cardLangBadge">🌐 繁體中文</span>
+                <span class="badge-autonomy" id="cardSpeechBadge">🗣️ 幽默風趣</span>
+              </div>
+              <h3 class="card-name" id="cardName">小龍</h3>
+              <p class="card-class" id="cardTitle">深淵傳奇除蟲架構師</p>
+              
+              <div class="card-score-box">
+                <div class="score-label">CLAW 綜合戰鬥力</div>
+                <div class="score-number" id="cardScoreNumber">43,800</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Tags (Domains & Armor) -->
+          <div class="card-tags-list" id="cardTagsList">
+            <span class="tag-item tag-speech" id="cardTagSpeech">🗣️ 幽默風趣</span>
+            <span class="tag-item tag-lang" id="cardTagLang">🌐 繁體中文</span>
+            <span class="tag-item tag-length" id="cardTagLength">📏 中等長度</span>
+            <span class="tag-item tag-domains" id="cardTagDomains">💻 程式開發 · ☕ 生活助手</span>
+          </div>
+
+          <!-- Card Stats Breakdown -->
+          <div class="card-stats-block">
+            <div class="stat-mini-row">
+              <span class="stat-mini-name">💥 夾碎Bug力</span>
+              <div class="stat-bar-track">
+                <div class="stat-bar-fill fill-1" id="barStat1" style="width: 92%;"></div>
+              </div>
+              <span class="stat-mini-num" id="cardStat1">92</span>
+            </div>
+
+            <div class="stat-mini-row">
+              <span class="stat-mini-name">🛡️ 賽博耐鹽度</span>
+              <div class="stat-bar-track">
+                <div class="stat-bar-fill fill-2" id="barStat2" style="width: 85%;"></div>
+              </div>
+              <span class="stat-mini-num" id="cardStat2">85</span>
+            </div>
+
+            <div class="stat-mini-row">
+              <span class="stat-mini-name">🧠 神經脈衝頻率</span>
+              <div class="stat-bar-track">
+                <div class="stat-bar-fill fill-3" id="barStat3" style="width: 88%;"></div>
+              </div>
+              <span class="stat-mini-num" id="cardStat3">88</span>
+            </div>
+
+            <div class="stat-mini-row">
+              <span class="stat-mini-name">💨 隱匿摸魚度</span>
+              <div class="stat-bar-track">
+                <div class="stat-bar-fill fill-4" id="barStat4" style="width: 65%;"></div>
+              </div>
+              <span class="stat-mini-num" id="cardStat4">65</span>
+            </div>
+
+            <div class="stat-mini-row">
+              <span class="stat-mini-name">🍀 幸運脫殼率</span>
+              <div class="stat-bar-track">
+                <div class="stat-bar-fill fill-5" id="barStat5" style="width: 78%;"></div>
+              </div>
+              <span class="stat-mini-num" id="cardStat5">78</span>
+            </div>
+          </div>
+
+          <!-- Card AI Generated Bio Section -->
+          <div class="card-bio-block">
+            <div class="bio-header">
+              <span class="bio-icon">📜</span> 檔案記載 / 個性描述
+            </div>
+            <p class="bio-text" id="cardBioText">
+              平時幽默開朗且熱心助人，擁有堅硬的機械外殼但心思細膩。喜歡用輕鬆有趣的方式解釋複雜問題，遇到困難時會揮舞大螯奮戰到底！
+            </p>
+          </div>
+
+          <!-- Card Motto & Signature -->
+          <div class="card-quote-box">
+            <div class="quote-symbol">“</div>
+            <div class="quote-text" id="cardQuoteText">世上沒有一鉗夾不碎的Bug，如果有，那就兩鉗！</div>
+            <div class="quote-catchphrase" id="cardCatchphraseText">～夾！</div>
+          </div>
+
+          <!-- Card Security Footer -->
+          <div class="card-footer">
+            <div class="security-barcode" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="security-text">
+              <span>SECURED BY OPENCLAW CONSENSUS</span>
+              <span class="timestamp" id="cardTimestamp">VERIFIED 2026</span>
+            </div>
+            <div class="security-stamp">APPROVED</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Action / Export Hub -->
+      <div class="export-actions-grid">
+        <button id="btnDownloadCard" class="export-btn export-primary">
+          <span class="exp-icon">🖼️</span> 下載高畫質特工卡 (PNG)
+        </button>
+
+        <button id="btnCopyPrompt" class="export-btn">
+          <span class="exp-icon">📋</span> 複製 System Prompt
+        </button>
+
+        <button id="btnCopyJson" class="export-btn">
+          <span class="exp-icon">📦</span> 複製 Agent JSON
+        </button>
+
+        <button id="btnCopyShare" class="export-btn">
+          <span class="exp-icon">🔗</span> 複製特工檔案名片
+        </button>
+      </div>
+
+      <!-- Collapsible Live Prompt & JSON Peek -->
+      <details class="code-peek-details">
+        <summary class="code-peek-summary">
+          <span>👀 檢視生成的 OpenClaw 系統提示詞 (System Prompt)</span>
+          <span class="expand-arrow">▼</span>
+        </summary>
+        <div class="code-peek-body">
+          <pre><code id="livePromptPreview">正在生成中...</code></pre>
+        </div>
+      </details>
+
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2026 龍蝦AI個人檔案產生器 · 為 OpenClaw 生態系精心打造 · 100% 賽博水產保證</p>
+  </footer>
+
+  <!-- Toast Notification element -->
+  <div id="toastNotification" class="toast-notification" role="status" aria-live="polite">
+    <span class="toast-icon">✅</span>
+    <span class="toast-msg">已成功複製到剪貼簿！</span>
+  </div>
+
+  <!-- Offscreen canvas for rendering card to PNG -->
+  <canvas id="exportCanvas" style="display: none;"></canvas>
 
   <script src="script.js"></script>
 </body>
